@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USTC North Gate - Memories</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cambria', serif;
+            background-color: #121212;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* 背景图片 */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/door.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+            z-index: -2;
+        }
+        
+        /* 动态粒子效果 */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 15px #fff,
+                0 0 20px #ff00de,
+                0 0 35px #ff00de,
+                0 0 40px #ff00de;
+            letter-spacing: 2px;
+        }
+        
+        p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: 
+                0 0 2px #fff,
+                0 0 4px #fff,
+                0 0 6px #fff;
+            margin-bottom: 30px;
+        }
+        
+        /* 图标容器 */
+        .icons {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10%;
+            bottom: 10%;
+        }
+        
+        /* 单个图标样式 */
+        .icon {
+            width: 80px;
+            height: 80px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+        }
+        
+        .icon:hover {
+            transform: scale(1.3);
+        }
+        
+        /* 视频弹出层 */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 70%;
+            max-width: 800px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 文本框样式 */
+        .text-box {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div id="particles-js"></div>
+    
+    <div class="container">
+        <h1>USTC North Gate</h1>
+        <p>The North Gate of University of Science and Technology of China stands as a symbol of knowledge and innovation, welcoming students to a world of academic excellence.</p>
+        
+        <div class="icons">
+            <!-- 地图图标 -->
+            <div class="icon" id="map-icon">
+                <svg viewBox="0 0 100 100">
+                    <path d="M50 10C32 10 20 25 20 40C20 65 50 85 50 85C50 85 80 65 80 40C80 25 68 10 50 10ZM50 50C45 50 40 45 40 40C40 35 45 30 50 30C55 30 60 35 60 40C60 45 55 50 50 50Z" fill="white"/>
+                </svg>
+            </div>
+            
+            <!-- 樱花图标 -->
+            <div class="icon" id="sakura-icon">
+                <svg viewBox="0 0 100 100">
+                    <path d="M50 10C55 10 60 15 60 20C60 25 55 30 50 30C45 30 40 25 40 20C40 15 45 10 50 10ZM30 25C33 25 36 28 36 31C36 34 33 37 30 37C27 37 24 34 24 31C24 28 27 25 30 25ZM70 25C73 25 76 28 76 31C76 34 73 37 70 37C67 37 64 34 64 31C64 28 67 25 70 25ZM20 40C23 40 26 43 26 46C26 49 23 52 20 52C17 52 14 49 14 46C14 43 17 40 20 40ZM80 40C83 40 86 43 86 46C86 49 83 52 80 52C77 52 74 49 74 46C74 43 77 40 80 40ZM35 50C40 50 45 55 45 60C45 65 40 70 35 70C30 70 25 65 25 60C25 55 30 50 35 50ZM65 50C70 50 75 55 75 60C75 65 70 70 65 70C60 70 55 65 55 60C55 55 60 50 65 50ZM50 60C55 60 60 65 60 70C60 75 55 80 50 80C45 80 40 75 40 70C40 65 45 60 50 60Z" fill="white"/>
+                </svg>
+            </div>
+            
+            <!-- 学士帽图标 -->
+            <div class="icon" id="graduate-icon">
+                <svg viewBox="0 0 100 100">
+                    <path d="M80 40L50 30L20 40L50 50L80 40ZM50 55C30 55 10 50 10 50V70C10 70 30 75 50 75C70 75 90 70 90 70V50C90 50 70 55 50 55Z" fill="white"/>
+                    <rect x="5" y="40" width="90" height="5" fill="white"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 视频弹出层 -->
+    <div class="video-modal" id="video-modal">
+        <div class="video-container">
+            <div class="close-btn" id="close-btn">×</div>
+            <video id="video-player" width="100%" controls>
+                <source src="video/graduate.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    
+    <!-- 文本框 -->
+    <div class="text-box" id="text-box">
+        "I never actually studied here, yet this place feels strangely familiar. Every time I pass by the North Gate, it evokes a sense of nostalgia for memories I never made, for a campus life I never experienced. It stands as a silent witness to dreams and aspirations, both realized and unfulfilled."
+    </div>
+
+    <!-- 粒子效果库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // 初始化粒子效果
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: false },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "bubble" },
+                        onclick: { enable: true, mode: "repulse" }
+                    },
+                    modes: {
+                        bubble: { distance: 100, size: 5, duration: 2, opacity: 0.8, speed: 3 },
+                        repulse: { distance: 100, duration: 0.4 }
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // 图标点击事件
+            document.getElementById('sakura-icon').addEventListener('click', function() {
+                window.location.href = 'https://amber2713.github.io/Sakura Avenue/sakura';
+            });
+            
+            document.getElementById('map-icon').addEventListener('click', function() {
+                window.location.href = 'https://jovial-naiad-a3ecb6.netlify.app';
+            });
+            
+            const graduateIcon = document.getElementById('graduate-icon');
+            const videoModal = document.getElementById('video-modal');
+            const closeBtn = document.getElementById('close-btn');
+            const videoPlayer = document.getElementById('video-player');
+            const textBox = document.getElementById('text-box');
+            
+            graduateIcon.addEventListener('click', function() {
+                videoModal.style.display = 'flex';
+                videoPlayer.play();
+            });
+            
+            closeBtn.addEventListener('click', function() {
+                videoModal.style.display = 'none';
+                videoPlayer.pause();
+                videoPlayer.currentTime = 0;
+                
+                // 显示文本框
+                textBox.style.display = 'block';
+                
+                // 10秒后淡出文本框
+                setTimeout(function() {
+                    textBox.style.opacity = '0';
+                    textBox.style.transition = 'opacity 2s';
+                    
+                    setTimeout(function() {
+                        textBox.style.display = 'none';
+                        textBox.style.opacity = '1';
+                    }, 2000);
+                }, 10000);
+            });
+        });
+    </script>
+</body>
+</html>
