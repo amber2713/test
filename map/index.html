@@ -1,322 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Choose Your Destination Interface</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {},
-            }
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-        }
-    </style>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cambria:wght@400;700&display=swap');
-        
-        body {
-            font-family: 'Cambria', serif;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Choose Your Destination</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url("images/map.jpg") no-repeat center center/cover;
+      font-family: Cambria, serif;
+      color: white;
+      text-shadow: 2px 2px 4px black, -1px -1px 2px #000;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      margin-top: 20px;
+      color: white;
+      text-shadow: 3px 3px 6px black, -2px -2px 3px #000;
+    }
+
+    /* canvas 粒子背景 */
+    canvas#bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .icon {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: black;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+      box-shadow: 0 0 10px rgba(255,255,255,0.6);
+    }
+
+    .icon:hover {
+      transform: scale(1.3);
+      background: white;
+    }
+
+    /* 随机放置图标 */
+    #mapIcon { top: 25%; left: 20%; }
+    #sakuraIcon { top: 40%; left: 70%; }
+    #personIcon { top: 65%; left: 35%; }
+    #bookIcon { top: 75%; left: 80%; }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script>
-        // 从lucide-react简化的图标组件
-        const MapPin = ({ size }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-        );
-        
-        const BookOpen = ({ size }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-            </svg>
-        );
-        
-        const School = ({ size }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 10V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4"></path>
-                <path d="M12 2v20"></path>
-                <path d="M19 10v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-4"></path>
-                <path d="M6 10H4v4h2"></path>
-                <path d="M18 10h2v4h-2"></path>
-            </svg>
-        );
-        
-        const TreePine = ({ size }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22v-7"></path>
-                <path d="M4 15h16"></path>
-                <path d="M8 11h8"></path>
-                <path d="M6 19h12"></path>
-                <path d="M9 7h6"></path>
-                <path d="M12 3v4"></path>
-            </svg>
-        );
+  <canvas id="bg"></canvas>
+  <h1>Choose Your Destination</h1>
 
-        // FloatingDots组件
-        const FloatingDots = () => {
-            const [dots, setDots] = React.useState([]);
+  <!-- 图标区域 -->
+  <div id="mapIcon" class="icon" onclick="window.open('https://jovial-naiad-a3ecb6.netlify.app','_blank')">🗺️</div>
+  <div id="sakuraIcon" class="icon" onclick="window.open('https://amber2713.github.io/Sakura-Avenue/sakura/','_blank')">🌸</div>
+  <div id="personIcon" class="icon" onclick="window.open('https://amber2713.github.io/sitetone/squre/','_blank')">👤</div>
+  <div id="bookIcon" class="icon" onclick="window.open('https://amber2713.github.io/sitetwo/library/','_blank')">📖</div>
 
-            React.useEffect(() => {
-                // 生成随机点
-                const generateDots = () => {
-                    const newDots = [];
-                    for (let i = 0; i < 50; i++) {
-                        newDots.push({
-                            id: i,
-                            x: Math.random() * window.innerWidth,
-                            y: Math.random() * window.innerHeight,
-                            size: Math.random() * 3 + 1,
-                            speedX: (Math.random() - 0.5) * 0.5,
-                            speedY: (Math.random() - 0.5) * 0.5,
-                        });
-                    }
-                    setDots(newDots);
-                };
+  <script>
+    // 粒子背景
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
 
-                generateDots();
-                
-                // 动画循环
-                const animateDots = () => {
-                    setDots(prevDots => 
-                        prevDots.map(dot => ({
-                            ...dot,
-                            x: (dot.x + dot.speedX + window.innerWidth) % window.innerWidth,
-                            y: (dot.y + dot.speedY + window.innerHeight) % window.innerHeight,
-                        }))
-                    );
-                };
+    let particles = [];
+    const numParticles = 100;
 
-                const interval = setInterval(animateDots, 50);
-                
-                // 处理窗口大小改变
-                const handleResize = () => {
-                    generateDots();
-                };
-                
-                window.addEventListener('resize', handleResize);
-                
-                return () => {
-                    clearInterval(interval);
-                    window.removeEventListener('resize', handleResize);
-                };
-            }, []);
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-            return (
-                <div className="fixed inset-0 pointer-events-none">
-                    {dots.map(dot => (
-                        <div
-                            key={dot.id}
-                            className="absolute rounded-full bg-white opacity-60"
-                            style={{
-                                left: `${dot.x}px`,
-                                top: `${dot.y}px`,
-                                width: `${dot.size}px`,
-                                height: `${dot.size}px`,
-                            }}
-                        />
-                    ))}
-                </div>
-            );
-        };
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.6;
+        this.speedY = (Math.random() - 0.5) * 0.6;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
 
-        // DestinationIcon组件
-        const DestinationIcon = ({ icon, title, englishName, onClick, className }) => {
-            const [isHovered, setIsHovered] = React.useState(false);
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
 
-            return (
-                <div
-                    className={`relative cursor-pointer transition-all duration-300 transform ${
-                        isHovered ? 'scale-125' : 'scale-100'
-                    } ${className}`}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    onClick={onClick}
-                >
-                    <div className="flex flex-col items-center space-y-3">
-                        <div className={`
-                            p-6 rounded-full bg-white bg-opacity-10 backdrop-blur-sm 
-                            border border-white border-opacity-30 
-                            transition-all duration-300 
-                            ${isHovered ? 'bg-opacity-20 shadow-lg shadow-white/20' : ''}
-                        `}>
-                            <div className="text-white text-4xl">
-                                {icon}
-                            </div>
-                        </div>
-                        
-                        <div className={`
-                            text-center transition-all duration-300 
-                            ${isHovered ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'}
-                        `}>
-                            <h3 className="text-white font-bold text-lg mb-1" style={{ 
-                                fontFamily: 'Cambria, serif',
-                                textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(255,255,255,0.3)'
-                            }}>
-                                {title}
-                            </h3>
-                            <p className="text-white text-sm opacity-90" style={{ 
-                                fontFamily: 'Cambria, serif',
-                                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-                            }}>
-                                {englishName}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
+    }
 
-        // 主应用组件
-        function App() {
-            const destinations = [
-                {
-                    icon: React.createElement(MapPin, { size: 48 }),
-                    title: "郭沫若广场",
-                    englishName: "Guo Moruo Square",
-                    url: "https://chat.qwen.ai"
-                },
-                {
-                    icon: React.createElement(TreePine, { size: 48 }),
-                    title: "樱花大道",
-                    englishName: "Cherry Blossom Avenue",
-                    url: "https://chat.qwen.ai"
-                },
-                {
-                    icon: React.createElement(BookOpen, { size: 48 }),
-                    title: "图书馆",
-                    englishName: "Library",
-                    url: "https://chat.qwen.ai"
-                },
-                {
-                    icon: React.createElement(School, { size: 48 }),
-                    title: "校史馆",
-                    englishName: "School History Museum",
-                    url: "https://chat.qwen.ai"
-                }
-            ];
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
 
-            const handleDestinationClick = (url) => {
-                window.open(url, '_blank');
-            };
-
-            return React.createElement(
-                'div',
-                { className: 'min-h-screen bg-black relative overflow-hidden' },
-                // 背景图片 - 注意路径指向images文件夹
-                React.createElement('div', {
-                    className: 'absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30',
-                    style: {
-                        backgroundImage: `url('images/map.jpg')`,
-                        backgroundBlendMode: 'overlay'
-                    }
-                }),
-                
-                // 浮动点动画
-                React.createElement(FloatingDots),
-                
-                // 主要内容
-                React.createElement(
-                    'div',
-                    { className: 'relative z-10 min-h-screen flex flex-col items-center justify-center px-4' },
-                    // 主标题
-                    React.createElement(
-                        'div',
-                        { className: 'text-center mb-16' },
-                        React.createElement(
-                            'h1',
-                            {
-                                className: 'text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4',
-                                style: {
-                                    fontFamily: 'Cambria, serif',
-                                    textShadow: '3px 3px 6px rgba(0,0,0,0.8), 0 0 12px rgba(255,255,255,0.4), 0 0 20px rgba(255,255,255,0.2)'
-                                }
-                            },
-                            'Choose Your Destination'
-                        ),
-                        React.createElement('div', { className: 'w-32 h-1 bg-white bg-opacity-60 mx-auto rounded-full' })
-                    ),
-
-                    // 目的地图标网格
-                    React.createElement(
-                        'div',
-                        { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-16 md:gap-20 lg:gap-24 max-w-4xl mx-auto' },
-                        // 非线性定位使用自定义变换
-                        React.createElement(DestinationIcon, {
-                            icon: destinations[0].icon,
-                            title: destinations[0].title,
-                            englishName: destinations[0].englishName,
-                            onClick: () => handleDestinationClick(destinations[0].url),
-                            className: 'md:transform md:translate-x-8 md:-translate-y-4'
-                        }),
-                        
-                        React.createElement(DestinationIcon, {
-                            icon: destinations[1].icon,
-                            title: destinations[1].title,
-                            englishName: destinations[1].englishName,
-                            onClick: () => handleDestinationClick(destinations[1].url),
-                            className: 'md:transform md:-translate-x-4 md:translate-y-8'
-                        }),
-                        
-                        React.createElement(DestinationIcon, {
-                            icon: destinations[2].icon,
-                            title: destinations[2].title,
-                            englishName: destinations[2].englishName,
-                            onClick: () => handleDestinationClick(destinations[2].url),
-                            className: 'md:transform md:-translate-x-12 md:-translate-y-2'
-                        }),
-                        
-                        React.createElement(DestinationIcon, {
-                            icon: destinations[3].icon,
-                            title: destinations[3].title,
-                            englishName: destinations[3].englishName,
-                            onClick: () => handleDestinationClick(destinations[3].url),
-                            className: 'md:transform md:translate-x-6 md:translate-y-6'
-                        })
-                    ),
-
-                    // 导航提示
-                    React.createElement(
-                        'div',
-                        { className: 'mt-20' },
-                        React.createElement(
-                            'p',
-                            {
-                                className: 'text-white text-lg opacity-80 text-center animate-pulse',
-                                style: {
-                                    fontFamily: 'Cambria, serif',
-                                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-                                }
-                            },
-                            'Click on any destination to explore'
-                        )
-                    )
-                )
-            );
-        }
-
-        // 渲染应用
-        ReactDOM.render(
-            React.createElement(App),
-            document.getElementById('root')
-        );
-    </script>
+    initParticles();
+    animate();
+  </script>
 </body>
 </html>
