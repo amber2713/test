@@ -28,11 +28,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('images/door.png');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), 
+                        url('images/door.png') no-repeat center center;
             background-size: cover;
-            background-position: center;
-            opacity: 0.7;
             z-index: -2;
+        }
+        
+        /* 备用背景样式（当图片加载失败时显示） */
+        .background::after {
+            content: "Background image: USTC North Gate";
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
         }
         
         /* 动态粒子效果 */
@@ -126,18 +135,24 @@
         
         .close-btn {
             position: absolute;
-            top: -30px;
+            top: -40px;
             right: 0;
             color: white;
-            font-size: 30px;
+            font-size: 40px;
             cursor: pointer;
             background: rgba(0, 0, 0, 0.5);
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 0, 0, 0.7);
+            transform: scale(1.1);
         }
         
         /* 文本框样式 */
@@ -155,11 +170,32 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             z-index: 10;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+        
+        .text-box.visible {
+            opacity: 1;
+        }
+        
+        /* 调试信息 */
+        .debug-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: #ff5555;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
+    <div class="background" id="background"></div>
     <div id="particles-js"></div>
     
     <div class="container">
@@ -207,12 +243,43 @@
         "I never actually studied here, yet this place feels strangely familiar. Every time I pass by the North Gate, it evokes a sense of nostalgia for memories I never made, for a campus life I never experienced. It stands as a silent witness to dreams and aspirations, both realized and unfulfilled."
     </div>
 
+    <!-- 调试信息 -->
+    <div class="debug-info" id="debug-info"></div>
+
     <!-- 粒子效果库 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <script>
+        // 调试功能：显示资源加载状态
+        function showDebugInfo() {
+            const debugInfo = document.getElementById('debug-info');
+            debugInfo.style.display = 'block';
+            debugInfo.textContent = 'Checking resources...';
+            
+            // 检查背景图片
+            const bg = new Image();
+            bg.onload = function() {
+                debugInfo.textContent += ' BG:OK';
+            }
+            bg.onerror = function() {
+                debugInfo.textContent += ' BG:Missing';
+                document.getElementById('background').style.background = "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), #333";
+            }
+            bg.src = 'images/door.png';
+            
+            // 检查视频
+            const video = new Audio();
+            video.onerror = function() {
+                debugInfo.textContent += ' Video:Missing';
+            }
+            video.src = 'video/graduate.mp4';
+        }
+        
         // 初始化粒子效果
         document.addEventListener('DOMContentLoaded', function() {
+            // 显示调试信息（仅在开发时需要）
+            // showDebugInfo();
+            
             particlesJS('particles-js', {
                 particles: {
                     number: { value: 80, density: { enable: true, value_area: 800 } },
@@ -262,7 +329,25 @@
             
             graduateIcon.addEventListener('click', function() {
                 videoModal.style.display = 'flex';
-                videoPlayer.play();
+                // 尝试播放视频，如果失败则显示消息
+                const playPromise = videoPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.error("Video playback failed:", error);
+                        videoModal.style.display = 'none';
+                        // 直接显示文本
+                        textBox.style.display = 'block';
+                        textBox.classList.add('visible');
+                        
+                        // 10秒后淡出文本框
+                        setTimeout(function() {
+                            textBox.classList.remove('visible');
+                            setTimeout(function() {
+                                textBox.style.display = 'none';
+                            }, 1500);
+                        }, 10000);
+                    });
+                }
             });
             
             closeBtn.addEventListener('click', function() {
@@ -272,16 +357,16 @@
                 
                 // 显示文本框
                 textBox.style.display = 'block';
+                setTimeout(function() {
+                    textBox.classList.add('visible');
+                }, 10);
                 
                 // 10秒后淡出文本框
                 setTimeout(function() {
-                    textBox.style.opacity = '0';
-                    textBox.style.transition = 'opacity 2s';
-                    
+                    textBox.classList.remove('visible');
                     setTimeout(function() {
                         textBox.style.display = 'none';
-                        textBox.style.opacity = '1';
-                    }, 2000);
+                    }, 1500);
                 }, 10000);
             });
         });
