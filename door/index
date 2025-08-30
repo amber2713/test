@@ -7,7 +7,8 @@
     body {
       margin: 0;
       height: 100vh;
-      background: url("images/door.jpg") no-repeat center center fixed;
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                  url("https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80") no-repeat center center fixed;
       background-size: cover;
       font-family: Cambria, serif;
       color: white;
@@ -108,11 +109,36 @@
       font-size: 1.2em;
       text-shadow: 1px 1px 3px black;
       display: none;
+      max-width: 80%;
+    }
+    
+    /* 添加加载指示器 */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+      z-index: 999;
+    }
+    
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <h1>Old North Gate</h1>
+
+  <!-- 加载指示器 -->
+  <div class="loader" id="loader"></div>
 
   <!-- 樱花图标 -->
   <img src="https://img.icons8.com/emoji/96/000000/cherry-blossom.png" 
@@ -135,7 +161,10 @@
   <!-- 视频容器 -->
   <div id="videoContainer">
     <span id="closeBtn" onclick="closeVideo()">✖</span>
-    <video id="graduateVideo" src="video/graduate.mp4"></video>
+    <video id="graduateVideo" controls>
+      <source src="https://assets.codepen.io/2362/small.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
   </div>
 
   <!-- 消息框 -->
@@ -152,13 +181,27 @@
       const container = document.getElementById('videoContainer');
       const video = document.getElementById('graduateVideo');
       const closeBtn = document.getElementById('closeBtn');
-
-      container.style.width = "80%";
-      container.style.height = "60%";
-      container.style.transform = "translate(-50%, -50%) scale(1)";
-      closeBtn.style.display = "block";
-
-      video.play();
+      const loader = document.getElementById('loader');
+      
+      // 显示加载指示器
+      loader.style.display = 'block';
+      
+      // 预加载视频
+      video.load();
+      
+      video.oncanplay = function() {
+        loader.style.display = 'none';
+        container.style.width = "80%";
+        container.style.height = "60%";
+        container.style.transform = "translate(-50%, -50%) scale(1)";
+        closeBtn.style.display = "block";
+        video.play();
+      };
+      
+      video.onerror = function() {
+        loader.style.display = 'none';
+        alert('Video failed to load. Please check the video file path.');
+      };
     }
 
     function closeVideo() {
@@ -176,6 +219,10 @@
       // 延迟显示消息框
       setTimeout(() => {
         messageBox.style.display = "block";
+        // 5秒后隐藏消息框
+        setTimeout(() => {
+          messageBox.style.display = "none";
+        }, 5000);
       }, 800);
     }
 
@@ -216,6 +263,14 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
     animateStars();
+    
+    // 添加点击任意处关闭消息框的功能
+    document.addEventListener('click', function(e) {
+      const messageBox = document.getElementById('messageBox');
+      if (messageBox.style.display === 'block') {
+        messageBox.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>
