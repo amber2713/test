@@ -30,8 +30,8 @@
             background-image: url('images/youyuanhui.jpg');
             background-size: cover;
             background-position: center;
-            filter: blur(8px) brightness(1.2);
-            transform: scale(1.05);
+            filter: blur(5px) brightness(0.85);
+            transform: scale(1.02);
             z-index: -2;
         }
         
@@ -41,7 +41,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(25, 55, 30, 0.7) 0%, rgba(15, 35, 20, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(25, 55, 30, 0.6) 0%, rgba(15, 35, 20, 0.8) 100%);
             z-index: -1;
         }
         
@@ -558,6 +558,11 @@
             transform: translateY(-3px);
         }
         
+        .song-item.active {
+            background: rgba(230, 194, 41, 0.4);
+            box-shadow: 0 0 15px rgba(230, 194, 41, 0.5);
+        }
+        
         .song-item i {
             color: #e6c229;
         }
@@ -750,19 +755,19 @@
                     <div class="song-list">
                         <div class="song-item" data-song="song1">
                             <i class="fas fa-play-circle"></i>
-                            <span>Spring Breeze</span>
+                            <span>Serene Garden</span>
                         </div>
                         <div class="song-item" data-song="song2">
                             <i class="fas fa-play-circle"></i>
-                            <span>Moonlight Sonata</span>
+                            <span>Peaceful Stream</span>
                         </div>
                         <div class="song-item" data-song="song3">
                             <i class="fas fa-play-circle"></i>
-                            <span>River Flows in You</span>
+                            <span>Morning Dew</span>
                         </div>
                         <div class="song-item" data-song="song4">
                             <i class="fas fa-play-circle"></i>
-                            <span>Garden Melody</span>
+                            <span>Bamboo Forest</span>
                         </div>
                     </div>
                     
@@ -778,7 +783,7 @@
     
     <!-- 音乐来源说明 -->
     <div class="music-credit">
-        Music from <a href="https://freepd.com" target="_blank">FreePD.com</a>
+        Music from <a href="https://pixabay.com/music/" target="_blank">Pixabay Music</a>
     </div>
     
     <script>
@@ -1366,10 +1371,10 @@
                     
                     // 使用免版税音乐资源
                     const songs = {
-                        'song1': 'https://freepd.com/music/Spring%20Breeze.mp3',
-                        'song2': 'https://freepd.com/music/Moonlight%20Sonata%20by%20Beethoven.mp3',
-                        'song3': 'https://freepd.com/music/River%20Flows%20in%20You.mp3',
-                        'song4': 'https://freepd.com/music/Garden%20Melody.mp3'
+                        'song1': 'https://cdn.pixabay.com/download/audio/2022/01/20/audio_dc946ebe0c.mp3?filename=serene-garden-208529.mp3',
+                        'song2': 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b45f32d7c.mp3?filename=peaceful-stream-21371.mp3',
+                        'song3': 'https://cdn.pixabay.com/download/audio/2022/10/25/audio_ecb505d825.mp3?filename=morning-dew-15449.mp3',
+                        'song4': 'https://cdn.pixabay.com/download/audio/2022/10/13/audio_7c7eb0eb0a.mp3?filename=bamboo-forest-191271.mp3'
                     };
                     
                     audioPlayer.src = songs[this.dataset.song];
